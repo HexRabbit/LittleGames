@@ -258,7 +258,7 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 				}
 				//
 				if(Board[a+2][b] == Sign) {
-//					Score[a+1][b] += 7;
+					Score[a+1][b] += 17;
 					if(Board[a-1][b] == Sign || Board[a+3][b] == Sign) {
 						Score[a+1][b] += 40;
 					}
@@ -267,7 +267,7 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 					}
 				}
 				if(Board[a][b+2] == Sign) {
-//					Score[a][b+1] += 7;
+					Score[a][b+1] += 17;
 					if(Board[a][b-1] == Sign || Board[a][b-3] == Sign) {
 						Score[a][b+1] += 40;
 					}
@@ -276,7 +276,7 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 					}
 				}
 				if(Board[a+2][b-2] == Sign) {
-//					Score[a+1][b-1] += 7;
+					Score[a+1][b-1] += 17;
 					if(Board[a-1][b+1] == Sign || Board[a+3][b-3] == Sign) {
 						Score[a+1][b-1] += 40;
 					}
@@ -285,7 +285,7 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 					}
 				}
 				if(Board[a+2][b+2] == Sign) {
-//					Score[a+1][b+1] += 7;
+					Score[a+1][b+1] += 17;
 					if(Board[a-1][b-1] == Sign || Board[a+3][b+3] == Sign) {
 						Score[a+1][b+1] += 40;
 					}
