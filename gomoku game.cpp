@@ -20,12 +20,19 @@ static int first = 0;
 //static int second = 0;
 
 int main() {
-	oncemore:{}
+	char input; //use for break (%c for \n)
+	printf("Welcome to Gomoku Gaming Center.\n");
+	while(1) {
+		if(scanf("%c",&input) == 1) {
+			break;
+		}
+	}
+	fflush(stdin);
+	oncemore:{printf("\n");}
 //	second = 0;
 	first = 0;
 	int L;
 	int mid;
-	char input; //use for break (%c for \n)
 	char X; // 
 	char Y; // 與AI共用 
 	int* AI_temp;
@@ -39,13 +46,6 @@ int main() {
 			Score[a][b] = -10000;
 		}
 	}
-	printf("Welcome to Gomoku Gaming Center.\n");
-	while(1) {
-		if(scanf("%c",&input) == 1) {
-			break;
-		}
-	}
-	fflush(stdin);
 	printf("How large is the gaming board? ");
 	while(L<7 || L>19) {
 		if(scanf("%d",&L) == 1) {
@@ -100,9 +100,15 @@ int main() {
 	Board[mid][mid] = AI_Sign;
 	Playerfirst:{}
 	Printer(L,Board);
+	Retry:{}
 	while(1){
 		if(scanf("%1c%1c[^\n]",&X,&Y) == 2) { //X縱Y橫
 			fflush(stdin);
+			if (Board[X][Y] == Sign || Board[X][Y] == AI_Sign)
+			{
+				printf("You can't do that!\n");
+				goto Retry;
+			}
 			Board[(char2int(X))][(char2int(Y))] = Sign;
 			if(WIN() == 1){
 				Printer(L,Board);
