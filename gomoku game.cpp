@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-void Printer(int L,char Board[19][19]);
+void Printer(int L);
 int char2int(char C);
 char int2char(int C);
 int* AI(int L);
@@ -16,22 +16,15 @@ static int Joint[19][19];
 static char Sign;
 static char AI_Sign;
 static int Count = 0;
-static int first = 0;
-//static int second = 0;
+static int first = -1;
+static char input; //use for break (%c for \n)
 
 int main() {
-	char input; //use for break (%c for \n)
 	printf("Welcome to Gomoku Gaming Center.\n");
-	while(1) {
-		if(scanf("%c",&input) == 1) {
-			break;
-		}
-	}
-	fflush(stdin);
-	oncemore:{printf("\n");}
-//	second = 0;
-	first = 0;
-	int L;
+	oncemore:{}
+	first = -1;
+	int L = 0;
+	int Sign_temp;
 	int mid;
 	char X; // 
 	char Y; // 與AI共用 
@@ -61,7 +54,7 @@ int main() {
 		}
 	}
 	fflush(stdin);
-
+	mid = L/2;
 	printf("Which do you wanna use?\n");
 	printf("Circle or Cross(O/X)? ");
 	scanf("%c",&Sign);
@@ -84,22 +77,24 @@ int main() {
 	fflush(stdin);
 	printf("Who start first?\n");
 	printf("Player = 1 , AI = 2 : ");
-	while(first != 1 && first != 2) {
+	while(first != 1 && first != 2 && first != 0) {
 		if(scanf("%d",&first) == 1) {
-			if(first != 1 && first != 2){
+			if(first != 1 && first != 2 && first != 0){
 				printf("God damnit. Could you please read the instruction?");
 			}
 		}
 	}
 	fflush(stdin);
 	printf("Game start!Please type in the coodinate of the board. (ex. 7c)\n");
+	if(first == 0) {
+		goto AItest;
+	}
 	if(first == 1) {
 		goto Playerfirst;
 	}
-	mid = L/2;
 	Board[mid][mid] = AI_Sign;
 	Playerfirst:{}
-	Printer(L,Board);
+	Printer(L);
 	Retry:{}
 	while(1){
 		if(scanf("%1c%1c[^\n]",&X,&Y) == 2) { //X縱Y橫
@@ -111,12 +106,12 @@ int main() {
 			}
 			Board[(char2int(X))][(char2int(Y))] = Sign;
 			if(WIN() == 1){
-				Printer(L,Board);
+				Printer(L);
 				printf("YOU WIN!\n");
 				goto FINISH;
 			}
 			AI_temp = AI(L);
-			Printer(L,Board);
+			Printer(L);
 			printf("AI moves %c%c !\n",int2char(AI_temp[0]),int2char(AI_temp[1])); 
 			if(WIN() == 2){
 				printf("AI WIN!\n");
@@ -127,20 +122,64 @@ int main() {
 	FINISH:
 		fflush(stdin);
 		printf("Thank you for playing.\n");
-		printf("Do you wanna play once more? (Y/N)\n");
+		printf("Do you wanna play once more? (Y/N) ");
 		while(1) {
 			if(scanf("%c",&input) == 1) {
 				if(input == 'Y') {
+					fflush(stdin);
+					printf("\n");
 					goto oncemore;
 				}
 				break;
 			}
 		}
-
+	return 0;
+	AItest:
+		fflush(stdin);
+		Board[mid][mid] = Sign;
+		Printer(L);
+		while (WIN() != 1 && WIN() != 2) {
+			AI(L); //same
+			Sign_temp = AI_Sign;
+			AI_Sign = Sign;
+			Sign = Sign_temp;
+			while(1) {
+				if(scanf("%c",&input) == 1) {
+					break;
+				}
+			}
+			fflush(stdin);
+			Printer(L);
+			if (WIN() != 1 && WIN() != 2) {
+				AI(L); //exchanged
+				Sign_temp = AI_Sign;
+				AI_Sign = Sign;
+				Sign = Sign_temp;
+				while(1) {
+					if(scanf("%c",&input) == 1) {
+						break;
+					}
+				}
+				fflush(stdin);
+				Printer(L);
+			}
+		}
+		printf("Testing is over.\n");
+		printf("Return to the game?(Y/N) ");
+		while(1) {
+			if(scanf("%c",&input) == 1) {
+				if(input == 'Y') {
+					fflush(stdin);
+					printf("\n");
+					goto oncemore;
+				}
+				break;
+			}
+		}
 	return 0;
 }
 
-void Printer(int L,char Board[19][19]) {
+void Printer(int L) {
 	char Num[] = "0123456789abcdefghi";
 	printf("* ");
 	for(int i=0; i<L; i++) {
@@ -731,29 +770,6 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 			}
 		}
 	}
-	/*
-	SECOND:
-		if(second == 0) {
-			second++;
-			int e = 0;
-			for(int a=0; a<L; a++) { 
-				for(int b=0; b<L; b++) {
-					if(Board[a][b] == Sign) { 
-						for(int c=-1; c<2 ; c++) { 
-							for(int d=-1; d<2; d++) {
-								if (c != 0 && d != 0) {
-									BestPoint[e][0] = a+c;
-									BestPoint[e][1] = b+d;
-									e++;
-								}
-							} 
-						}
-					}
-				} 
-			}
-			Count = e-1;
-		}
-	*/
 	srand(time(0));
 	r = rand() % (Count + 1);
 	Board[(BestPoint[r][0])][(BestPoint[r][1])] = AI_Sign;
