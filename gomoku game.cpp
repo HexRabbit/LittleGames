@@ -13,6 +13,7 @@ static int BestPoint[10][2];
 static char Board[19][19];
 static int Score[19][19];
 static int Joint[19][19];
+static int AI_Joint[19][19];
 static char Sign;
 static char AI_Sign;
 static int Count = 0;
@@ -66,15 +67,15 @@ int main() {
 		AI_Sign = 'O';
 	}
 	if((Sign != 'O') && (Sign != 'X')) {
-		printf("You've chose the HIDDEN one!\n");
+		printf("You've chose the HIDDEN one!");
 		AI_Sign = 'X';
-	}
-	while(1) {
-		if(scanf("%c",&input) == 1) {
-			break;
+		while(1) {
+			if(scanf("%c",&input) == 1) {
+				break;
+			}
 		}
+		fflush(stdin);
 	}
-	fflush(stdin);
 	printf("Who start first?\n");
 	printf("Player = 1 , AI = 2 : ");
 	while(first != 1 && first != 2 && first != 0) {
@@ -85,10 +86,11 @@ int main() {
 		}
 	}
 	fflush(stdin);
-	printf("Game start!Please type in the coodinate of the board. (ex. 7c)\n");
 	if(first == 0) {
+		printf("Enable AI self-testing!!!\n");
 		goto AItest;
 	}
+	printf("Game start!Please type in the coodinate of the board. (ex. 7c)\n");
 	if(first == 1) {
 		goto Playerfirst;
 	}
@@ -125,7 +127,7 @@ int main() {
 		printf("Do you wanna play once more? (Y/N) ");
 		while(1) {
 			if(scanf("%c",&input) == 1) {
-				if(input == 'Y') {
+				if(input == 'Y' || input == 'y') {
 					fflush(stdin);
 					printf("\n");
 					goto oncemore;
@@ -264,6 +266,11 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 			Joint[a][b] = 0;
 		}
 	}
+	for(int a=0; a<L; a++) {
+		for(int b=0; b<L; b++) {
+			AI_Joint[a][b] = 0;
+		}
+	}
 //	if(second == 0) {
 //		goto SECOND;
 //	}
@@ -301,20 +308,38 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 				if(Board[a+1][b-1] == Sign) {
 					Score[a-1][b+1] += 35;
 				}
-				//
+				// 雙單
 				if(Board[a+2][b] == Sign) {
 					Score[a+1][b] += 17;
-					if(Board[a-1][b] == Sign || Board[a+3][b] == Sign) {
-						Score[a+1][b] += 40;
+					if(Board[a-1][b] == Sign) {
+						Score[a+1][b] += 400;
+						if (Board[a-2][b] == AI_Sign || Board[a+3][b] == AI_Sign){
+							Score[a+1][b] += -365;
+						}
 					}
-						if(Board[a-1][b] == Sign && Board[a+3][b] == Sign) {
+					if(Board[a+3][b] == Sign) {
+						Score[a+1][b] += 400;
+						if (Board[a+4][b] == AI_Sign || Board[a-1][b] == AI_Sign){
+							Score[a+1][b] += -365;
+						}
+					}
+					if(Board[a-1][b] == Sign && Board[a+3][b] == Sign) {
 						Score[a+1][b] += 7000;
 					}
 				}
 				if(Board[a][b+2] == Sign) {
 					Score[a][b+1] += 17;
-					if(Board[a][b-1] == Sign || Board[a][b-3] == Sign) {
-						Score[a][b+1] += 40;
+					if(Board[a][b-1] == Sign) {
+						Score[a][b+1] += 400;
+						if (Board[a][b-2] == AI_Sign || Board[a][b+3] == AI_Sign){
+							Score[a][b+1] += -365;
+						}
+					}
+					if(Board[a][b+3] == Sign) {
+						Score[a][b+1] += 400;
+						if (Board[a][b+4] == AI_Sign || Board[a][b-1] == AI_Sign){
+							Score[a][b+1] += -365;
+						}
 					}
 					if(Board[a][b-1] == Sign && Board[a][b-3] == Sign) {
 						Score[a][b+1] += 7000;
@@ -322,8 +347,17 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 				}
 				if(Board[a+2][b-2] == Sign) {
 					Score[a+1][b-1] += 17;
-					if(Board[a-1][b+1] == Sign || Board[a+3][b-3] == Sign) {
-						Score[a+1][b-1] += 40;
+					if(Board[a-1][b+1] == Sign) {
+						Score[a+1][b-1] += 400;
+						if (Board[a-2][b+2] == AI_Sign || Board[a+3][b-3] == AI_Sign){
+							Score[a+1][b-1] += -365;
+						}
+					}
+					if(Board[a+3][b-3] == Sign) {
+						Score[a+1][b-1] += 400;
+						if (Board[a+4][b-4] == AI_Sign || Board[a-1][b+1] == AI_Sign){
+							Score[a+1][b-1] += -365;
+						}
 					}
 					if(Board[a-1][b+1] == Sign && Board[a+3][b-3] == Sign) {
 						Score[a+1][b-1] += 7000;
@@ -331,8 +365,17 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 				}
 				if(Board[a+2][b+2] == Sign) {
 					Score[a+1][b+1] += 17;
-					if(Board[a-1][b-1] == Sign || Board[a+3][b+3] == Sign) {
-						Score[a+1][b+1] += 40;
+					if(Board[a-1][b-1] == Sign) {
+						Score[a+1][b+1] += 400;
+						if (Board[a-2][b-2] == AI_Sign || Board[a+3][b+3] == AI_Sign){
+							Score[a+1][b+1] += -365;
+						}
+					}
+					if(Board[a+3][b+3] == Sign) {
+						Score[a+1][b+1] += 400;
+						if (Board[a+4][b+4] == AI_Sign || Board[a-1][b-1] == AI_Sign){
+							Score[a+1][b+1] += -365;
+						}
 					}
 					if(Board[a-1][b-1] == Sign && Board[a+3][b+3] == Sign) {
 						Score[a+1][b+1] += 7000;
@@ -618,42 +661,42 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 			// 交會點賦值
 			if((Board[a][b-1] == AI_Sign) && (Board[a][b-2] == AI_Sign)) {
 				if(Board[a][b-3] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a][b+1] == AI_Sign) && (Board[a][b+2] == AI_Sign)) {
 				if(Board[a][b+3] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a+1][b] == AI_Sign) && (Board[a+2][b] == AI_Sign)) {
 				if(Board[a+3][b] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a-1][b] == AI_Sign) && (Board[a-2][b] == AI_Sign)) {
 				if(Board[a-3][b] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a-1][b-1] == AI_Sign) && (Board[a-2][b-2] == AI_Sign)) {
 				if(Board[a-3][b-3] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a+1][b+1] == AI_Sign) && (Board[a+2][b+2] == AI_Sign)) {
 				if(Board[a+3][b+3] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a+1][b-1] == AI_Sign) && (Board[a+2][b-2] == AI_Sign)) {
 				if(Board[a+3][b-3] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}
 			if((Board[a-1][b+1] == AI_Sign) && (Board[a-2][b+2] == AI_Sign)) {
 				if(Board[a-3][b+3] != Sign) {
-					Joint[a][b] += 1;
+					AI_Joint[a][b] += 1;
 				}
 			}	
 			if((Board[a][b-1] == Sign) && (Board[a][b-2] == Sign)) {
@@ -701,8 +744,8 @@ int* AI(int L) { //先手時預設下在棋盤正中間  //仍須設定地圖邊
 	//加權
 	for(int a=0; a<L; a++) {
 		for(int b=0; b<L; b++) {
-			if(Joint[a][b] >= 2) {
-				Score[a][b] += Joint[a][b]*180;
+			if(AI_Joint[a][b] >= 2) {
+				Score[a][b] += AI_Joint[a][b]*180;
 			}
 			if(Joint[a][b] <= -2) {
 				Score[a][b] += -Joint[a][b]*155;
