@@ -774,10 +774,10 @@ int* AI(int L) {  //是否該改採用行列掃描方式?
 		}
 	}
 	*/
-	/*
+
 	for(int a=0; a<L; a++) {
 		for(int b=0; b<L; b++) {
-			if(Score[a][b] > 15) {
+			if(Score[a][b] > 10) {
 				goto A;
 			}
 			if((a == L-1) && (b == L-1)) {
@@ -790,7 +790,7 @@ int* AI(int L) {  //是否該改採用行列掃描方式?
 		}
 	}
 	A:{}
-	*/
+
 	
 	//清除已落子位置
 	for(int a=0; a<L; a++) {
@@ -800,25 +800,32 @@ int* AI(int L) {  //是否該改採用行列掃描方式?
 			}
 		}
 	}
+	for(int a=0; a<L; a++) {
+		for(int b=0; b<L; b++) {
+			if(Score[a][b] > 5000 && (a == 0 || b == 0 || a == L-1 || b == L-1)) {
+				goto Boundary;
+			}
+		}
+	}
 	for(int a=0;a<L;a++) {
 		Score[a][L-1] = 0;
 		Score[a][0] = 0;
 		Score[L-1][a] = 0;
 		Score[0][a] = 0;
 	}
-	
+	Boundary:{}
 	Count = 0;
 	
 	for(int a=0; a<L; a++) {
 		for(int b=0; b<L; b++) {
-			if(Score[a][b] >= HighestScore && Score[a][b] > 0){
-				if(((Score[a][b] - HighestScore) <= 15) && (Count < 10)) {
-					Count++;
+			if((Score[a][b] >= HighestScore) && (Score[a][b] > 0)){
+				if((Score[a][b] - HighestScore) <= 10 && Count < 10) {
+					Count++; 
 					HighestScore = Score[a][b]; 
 					BestPoint[Count][0] = a;
 					BestPoint[Count][1] = b;
 				}
-				if((Score[a][b] - HighestScore) > 15) {
+				if((Score[a][b] - HighestScore) > 10) {
 					Count = 0;
 					HighestScore = Score[a][b];
 					BestPoint[0][0] = a;
