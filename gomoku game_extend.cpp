@@ -10,10 +10,10 @@ int* AI(int L);
 int WIN(); 
 
 static int BestPoint[10][2];
-static char Board[19][19];
-static int Score[19][19];
-static int Joint[19][19];
-static int AI_Joint[19][19];
+static char Board[24][24];
+static int Score[24][24];
+static int Joint[24][24];
+static int AI_Joint[24][24];
 static char Sign;
 static char AI_Sign;
 static int Count = 0;
@@ -30,23 +30,23 @@ int main() {
 	char X; // 
 	char Y; // 與AI共用 
 	int* AI_temp;
-	for(int a=0; a<19; a++) {
-		for(int b=0; b<19; b++) {
+	for(int a=0; a<24; a++) {
+		for(int b=0; b<24; b++) {
 			Board[a][b] = '-';
 		}
 	}
-	for(int a=0; a<19; a++) {
-		for(int b=0; b<19; b++) {
+	for(int a=0; a<24; a++) {
+		for(int b=0; b<24; b++) {
 			Score[a][b] = -10000;
 		}
 	}
 	printf("How large is the gaming board? (Recommended : 19) ");
-	while(L<7 || L>19) {
+	while(L<7 || L>24) {
 		if(scanf("%d",&L) == 1) {
 			if(L<7){
 				printf("Well,you should draw it on your face. (too small)\n");
 			}
-			else if(L>19) {
+			else if(L>24) {
 				printf("Nice choise,now go buy one for me. (too large)\n");
 			}
 //			else {
@@ -184,7 +184,7 @@ int main() {
 }
 
 void Printer(int L) {
-	char Num[] = "0123456789abcdefghi";
+	char Num[] = "0123456789abcdefghijklmn";
 	printf("* ");
 	for(int i=0; i<L; i++) {
 		printf("%c ",Num[i]);
@@ -225,6 +225,11 @@ int char2int(char C) {
 		case 'g': return 16;
 		case 'h': return 17;
 		case 'i': return 18;
+		case 'j': return 19;
+		case 'k': return 20;
+		case 'l': return 21;
+		case 'm': return 22;
+		case 'n': return 23;
 	}
 }
 char int2char(int C) {
@@ -248,6 +253,11 @@ char int2char(int C) {
 		case 16: return 'g';
 		case 17: return 'h';
 		case 18: return 'i';
+		case 19: return 'j';
+		case 20: return 'k';
+		case 21: return 'l';
+		case 22: return 'm';
+		case 23: return 'n';
 	}
 }
 int* AI(int L) {  //是否該改採用行列掃描方式?
@@ -823,8 +833,8 @@ int* AI(int L) {  //是否該改採用行列掃描方式?
 	return BestPoint[r];
 }
 int WIN() {
-	for(int a=0; a<19; a++) { 
-		for(int b=0; b<19; b++) {
+	for(int a=0; a<24; a++) { 
+		for(int b=0; b<24; b++) {
 			if(Board[a][b] == Board[a+1][b+1] && Board[a+1][b+1] == Board[a+2][b+2] && Board[a+2][b+2] == Board[a+3][b+3] && Board[a+3][b+3] == Board[a+4][b+4]) {
 				if(Board[a][b] == Sign) {
 					return 1;
