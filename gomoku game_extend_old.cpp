@@ -20,6 +20,7 @@ static int Count = 0;
 static int first = -1;
 static char input; //use for break (%c for \n)
 
+
 int main() {
 	printf("Welcome to Gomoku Gaming Center.\n");
 	oncemore:{}
@@ -102,8 +103,7 @@ int main() {
 	while(1){
 		if(scanf("%1c%1c[^\n]",&X,&Y) == 2) { //X縱Y橫
 			fflush(stdin);
-			if (Board[char2int(X)][char2int(Y)] == Sign || Board[char2int(X)][char2int(Y)] == AI_Sign)
-			{
+			if (Board[char2int(X)][char2int(Y)] == Sign || Board[char2int(X)][char2int(Y)] == AI_Sign){
 				printf("You can't do that!\n");
 				goto Retry;
 			}
@@ -123,6 +123,7 @@ int main() {
 			}
 		}
 	}
+
 	FINISH:
 		fflush(stdin);
 		printf("Thank you for playing.\n");
@@ -138,6 +139,7 @@ int main() {
 			}
 		}
 	return 0;
+
 	AItest:
 		fflush(stdin);
 		Board[mid][mid] = Sign;
